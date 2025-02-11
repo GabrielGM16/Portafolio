@@ -1,75 +1,195 @@
-/* Estilos generales para simular una terminal */
+/* Fondo de escritorio (simula un entorno Linux) */
 body {
-    background-color: #2b2b2b;
-    color: #33ff33;
-    font-family: 'Courier New', Courier, monospace;
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-  }
-  
-  .terminal {
-    background-color: #000;
-    border: 1px solid #333;
-    border-radius: 5px;
-    margin: 20px auto;
-    max-width: 800px;
-    box-shadow: 0 0 10px #000;
-    display: flex;
-    flex-direction: column;
-    height: 80vh;
-  }
-  
-  .terminal-header {
-    background-color: #333;
-    padding: 10px;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-  }
-  
-  .terminal-title {
-    font-weight: bold;
-  }
-  
-  .terminal-body {
-    flex: 1;
-    padding: 10px;
-    overflow-y: auto;
-  }
-  
-  /* Cada línea de comando (prompt + input) */
-  .command-line {
-    display: flex;
-    align-items: center;
-    margin: 0;
-  }
-  
-  .prompt {
-    color: #33ff33;
-    margin-right: 5px;
-  }
-  
-  /* Estilo para el input de cada línea */
-  .command-line input[type="text"] {
-    background-color: #000;
-    border: none;
-    outline: none;
-    color: #33ff33;
-    font-family: inherit;
-    font-size: inherit;
-    width: 90%;
-  }
-  
-  /* Opcional: efecto parpadeante para un cursor personalizado */
-  @keyframes blink {
-    0% { opacity: 1; }
-    50% { opacity: 0; }
-    100% { opacity: 1; }
-  }
-  
-  .blinking-cursor {
-    font-weight: bold;
-    font-size: 1em;
-    animation: blink 1s step-end infinite;
-  }
-  
+  background-image: url('img/linux.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Íconos del escritorio */
+#desktop {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 50;
+}
+
+.desktop-icon {
+  width: 80px;
+  text-align: center;
+  cursor: pointer;
+  color: #fff;
+}
+
+.desktop-icon img {
+  width: 48px;
+  height: 48px;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Contenedor para las ventanas */
+#window-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Estilo general para todas las ventanas */
+.window {
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #666;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  border-radius: 5px;
+  z-index: 100;
+}
+
+/* Encabezado de ventana (común a terminal, explorador, ayuda, etc.) */
+.window-header {
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: move;
+}
+
+.window-header .window-title {
+  font-weight: bold;
+}
+
+.window-controls {
+  display: flex;
+  gap: 5px;
+}
+
+.window-controls .control-btn {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.window-controls .close {
+  background-color: #ff5c5c;
+}
+
+.window-controls .minimize {
+  background-color: #ffbd4c;
+}
+
+.window-controls .maximize {
+  background-color: #00ca56;
+}
+
+/* --- Estilos específicos para la terminal --- */
+.terminal-body {
+  background-color: #000;
+  color: #33ff33;
+  font-family: 'Courier New', Courier, monospace;
+  padding: 10px;
+  height: calc(100% - 40px);
+  overflow-y: auto;
+}
+
+.command-line {
+  display: flex;
+  align-items: center;
+}
+
+.prompt {
+  color: #33ff33;
+  margin-right: 5px;
+}
+
+.command-line input[type="text"] {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: #33ff33;
+  font-family: inherit;
+  font-size: inherit;
+  width: 90%;
+}
+
+/* --- Estilos específicos para el explorador --- */
+.explorer-body {
+  padding: 10px;
+  height: calc(100% - 40px);
+  overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #fff;
+}
+
+.explorer-item {
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  margin: 5px;
+  text-align: center;
+  vertical-align: top;
+  cursor: pointer;
+}
+
+.explorer-item.folder {
+  background-image: url('folder-icon.png');
+  background-size: 50px 50px;
+  background-repeat: no-repeat;
+  background-position: center top;
+}
+
+.explorer-item.file {
+  background-image: url('file-icon.png');
+  background-size: 50px 50px;
+  background-repeat: no-repeat;
+  background-position: center top;
+}
+
+.explorer-item span {
+  display: block;
+  margin-top: 60px;
+  font-size: 0.9em;
+  color: #333;
+  word-wrap: break-word;
+}
+
+/* --- Estilos para la ventana de Ayuda (comandos) --- */
+.help-body {
+  padding: 10px;
+  background-color: #f9f9f9;
+  color: #333;
+  font-family: Arial, sans-serif;
+  height: calc(100% - 40px);
+  overflow-y: auto;
+}
+
+.help-body ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.help-body li {
+  margin-bottom: 5px;
+  padding: 2px 4px;
+  cursor: pointer;
+}
+
+.help-body li:hover {
+  background-color: #e0e0e0;
+}
