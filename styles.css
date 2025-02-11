@@ -147,14 +147,14 @@ body {
 }
 
 .explorer-item.folder {
-  background-image: url('folder-icon.png');
+  background-image: url('img/carpeta\(1\).png');
   background-size: 50px 50px;
   background-repeat: no-repeat;
   background-position: center top;
 }
 
 .explorer-item.file {
-  background-image: url('file-icon.png');
+  background-image: url('img/txt.png');
   background-size: 50px 50px;
   background-repeat: no-repeat;
   background-position: center top;

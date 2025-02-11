@@ -287,7 +287,7 @@ function setupTerminal(terminalBody) {
 /* VENTANA EXPLORADOR */
 /*******************/
 function openExplorerWindow() {
-  // La ruta inicial es la ruta actual del sistema de archivos
+
   let explorerPath = [...currentPath];
   
   const win = document.createElement("div");
