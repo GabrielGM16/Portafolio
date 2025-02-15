@@ -1,5 +1,8 @@
-/* Fondo de escritorio (simula un entorno Linux) */
+/* ============================ */
+/* Global y Fondo de Escritorio */
+/* ============================ */
 body {
+  /* Ajusta la imagen de fondo a tu gusto */
   background-image: url('img/linux.webp');
   background-size: cover;
   background-position: center;
@@ -10,32 +13,205 @@ body {
   overflow: hidden;
 }
 
-/* Íconos del escritorio */
+/* =================== */
+/* Íconos / Botones del Escritorio */
+/* =================== */
 #desktop {
   position: absolute;
   bottom: 20px;
   left: 20px;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  gap: 20px;
   z-index: 50;
 }
 
-.desktop-icon {
-  width: 80px;
-  text-align: center;
+/* Botón base */
+.button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 5.3em;
+  height: 5.3em;
+  border: none;
   cursor: pointer;
+  border-radius: 0.4em;
+  background: rgba(235, 252, 254, 0.8);
+  outline: none;
+}
+
+/* Contenedor */
+.container {
+  position: relative;
+  width: 3.5em;
+  height: 3.1em;
+  background: none;
+  overflow: hidden;
+}
+
+/* Estilo del icono de terminal */
+.terminal-icon {
+  width: 3em;
+  height: 2em;
+  background: #000;
+  border: 2px solid #4caf50;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.terminal-icon .prompt {
+  font-family: monospace;
+  color: #4caf50;
+  font-size: 1.2em;
+}
+
+/* Estilo del icono de ayuda */
+.help-icon {
+  width: 2.1em;
+  height: 2.1em;
+  background: #f39c12;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.5em;
   color: #fff;
 }
 
-.desktop-icon img {
-  width: 48px;
-  height: 48px;
-  display: block;
-  margin: 0 auto;
+.help-icon .question-mark {
+  font-family: Arial, sans-serif;
 }
 
-/* Contenedor para las ventanas */
+/* Icono de carpeta (sin cambios) */
+.folder {
+  position: absolute;
+}
+
+.folder_one {
+  bottom: 0;
+  width: 100%;
+  height: 88%;
+  border-radius: 3px;
+  border-top: 2px solid rgb(206, 167, 39);
+  background: linear-gradient(-35deg, rgb(238, 194, 47) 5%, rgb(255, 223, 118));
+}
+
+.folder_two {
+  top: 5%;
+  width: 38%;
+  height: 19%;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  background-color: rgb(206, 167, 39);
+  box-shadow: 0 1px 5px -2px rgba(0, 0, 0, 0.5);
+}
+
+.folder_two::before {
+  content: "";
+  position: absolute;
+  left: 88%;
+  width: 0;
+  height: 0;
+  border-left: 7px solid rgb(206, 167, 39);
+  border-top: 0.3em solid transparent;
+  border-bottom: 0.3em solid transparent;
+}
+
+.folder_three {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  left: 0.5em;
+  bottom: 0;
+  width: 2.5em;
+  height: 0.9em;
+  border-radius: 4px 4px 0 0;
+  background: linear-gradient(-35deg, rgb(25, 102, 218), rgb(109, 165, 249));
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+}
+
+.folder_four {
+  left: 1em;
+  bottom: 0.3em;
+  width: 1.5em;
+  height: 0.18em;
+  border-radius: 1em;
+  background-color: rgb(20, 77, 163);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Línea activa */
+.active_line {
+  position: absolute;
+  bottom: 0;
+  width: 0.9em;
+  height: 0.4em;
+  background-color: #999;
+  border: none;
+  border-radius: 1em;
+  transition: all 0.15s linear;
+}
+
+.button:active .active_line,
+.button:focus .active_line {
+  width: 2.3em;
+  background-color: rgb(41, 126, 255);
+}
+
+.button:focus .container {
+  animation: wow 1s forwards;
+}
+
+@keyframes wow {
+  20% {
+    scale: 0.8;
+  }
+  30% {
+    scale: 1;
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+  65% {
+    transform: translateY(4px);
+  }
+  80% {
+    transform: translateY(0);
+  }
+  100% {
+    scale: 1;
+  }
+}
+
+/* Tooltip de texto */
+.text {
+  position: absolute;
+  top: -4.5em;
+  width: 7.7em;
+  height: 2.6em;
+  background-color: #666;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  text-shadow: 0 0 10px rgb(0, 0, 0);
+  opacity: 0;
+  transition: all 0.25s linear;
+}
+
+.button:hover .text {
+  opacity: 1;
+}
+
+/* ======================= */
+/* Contenedor de Ventanas  */
+/* ======================= */
 #window-container {
   position: absolute;
   top: 0;
@@ -44,7 +220,9 @@ body {
   height: 100%;
 }
 
-/* Estilo general para todas las ventanas */
+/* ===================== */
+/* TERMINAL (mantiene el estilo anterior) */
+/* ===================== */
 .window {
   position: absolute;
   background-color: #fff;
@@ -54,56 +232,67 @@ body {
   z-index: 100;
 }
 
-/* Encabezado de ventana (común a terminal, explorador, ayuda, etc.) */
-.window-header {
-  background-color: #333;
-  color: #fff;
+/* Encabezado oscuro solo para la Terminal */
+.terminal-toolbar {
+  background-color: #212121;
   padding: 5px 10px;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   cursor: move;
 }
 
-.window-header .window-title {
-  font-weight: bold;
+.toolbar-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.window-controls {
+.button-group {
   display: flex;
   gap: 5px;
 }
 
-.window-controls .control-btn {
+.circle-12 {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  display: inline-block;
-  cursor: pointer;
 }
 
-.window-controls .close {
-  background-color: #ff5c5c;
+.circle-12.red {
+  background: #ee411a;
 }
 
-.window-controls .minimize {
-  background-color: #ffbd4c;
+.circle-12.yellow {
+  background: #f9c74f;
 }
 
-.window-controls .maximize {
-  background-color: #00ca56;
+.circle-12.green {
+  background: #90be6d;
 }
 
-/* --- Estilos específicos para la terminal --- */
+.terminal-title {
+  color: #d5d0ce;
+  font-size: 14px;
+}
+
 .terminal-body {
   background-color: #000;
-  color: #33ff33;
+  color: #fff;
   font-family: 'Courier New', Courier, monospace;
   padding: 10px;
   height: calc(100% - 40px);
   overflow-y: auto;
+}
+
+.prompt {
+  color: #00ff00; /* verde */
+  margin-right: 5px;
+}
+
+.typed-command {
+  color: #fff; /* texto de comando en blanco */
 }
 
 .command-line {
@@ -111,40 +300,87 @@ body {
   align-items: center;
 }
 
-.prompt {
-  color: #33ff33;
-  margin-right: 5px;
-}
-
 .command-line input[type="text"] {
   background-color: transparent;
   border: none;
   outline: none;
-  color: #33ff33;
+  color: #fff;
   font-family: inherit;
   font-size: inherit;
   width: 90%;
 }
 
-/* --- Estilos específicos para el explorador --- */
-.explorer-body {
-  padding: 10px;
-  height: calc(100% - 40px);
-  overflow-y: auto;
-  display: flex;
-  flex-wrap: wrap;
-  background-color: #fff;
+/* ===================== */
+/* EXPLORADOR & AYUDA (Estilo Card) */
+/* ===================== */
+.card {
+  position: absolute;
+  width: 600px;
+  height: 400px;
+  margin: 0 auto;
+  background-color: #F8FBFE; /* color claro */
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  z-index: 200;
+  overflow: hidden; /* por si el contenido se desborda */
 }
 
-.explorer-item {
+.tools {
+  display: flex;
+  align-items: center;
+  padding: 9px;
+  cursor: move; /* para arrastrar */
+}
+
+/* Reutilizamos .circle y .box para los "semáforos" */
+.tools .circle {
+  padding: 0 4px;
+}
+
+.box {
   display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.box.red {
+  background-color: #ff605c;
+}
+.box.yellow {
+  background-color: #ffbd44;
+}
+.box.green {
+  background-color: #00ca4e;
+}
+
+.card__content {
+  width: 100%;
+  height: calc(100% - 40px);
+  overflow-y: auto;
+  padding: 10px;
+}
+
+/* Explorador */
+.explorer-body {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 15px;
+}
+
+
+/* Cada ítem (carpeta o archivo) */
+.explorer-item {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100px;
   height: 100px;
-  margin: 5px;
   text-align: center;
-  vertical-align: top;
-  cursor: pointer;
 }
+
 
 .explorer-item.folder {
   background-image: url('img/carpetaicon.png');
@@ -160,21 +396,27 @@ body {
   background-position: center top;
 }
 
+
+
 .explorer-item span {
   display: block;
   margin-top: 60px;
   font-size: 0.9em;
   color: #333;
   word-wrap: break-word;
+  word-break: break-all; /* Esto fuerza la división en palabras largas */
+  max-width: 90px; /* Asegura que el texto no desborde el icono */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* --- Estilos para la ventana de Ayuda (comandos) --- */
+
+/* Ayuda */
 .help-body {
-  padding: 10px;
-  background-color: #f9f9f9;
+  background-color: #fff0;
+  height: 100%;
   color: #333;
   font-family: Arial, sans-serif;
-  height: calc(100% - 40px);
   overflow-y: auto;
 }
 

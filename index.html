@@ -2,26 +2,49 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Portafolio - Martin Gabriel Godinez Morales</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <!-- Escritorio -->
   <div id="desktop">
-    <div class="desktop-icon" id="icon-terminal">
-      <img src="img/codigo.png" alt="Terminal" />
-      <span>Terminal</span>
-    </div>
-    <div class="desktop-icon" id="icon-explorer">
-      <img src="img/carpeta.png" alt="Explorador" />
-      <span>Explorador</span>
-    </div>
-    <div class="desktop-icon" id="icon-help">
-      <img src="img/boton-web-de-ayuda.png" alt="Ayuda" />
-      <span>Ayuda</span>
-    </div>
-  </div>
+    <!-- Botón animado para abrir la Terminal -->
+    <button class="button" id="icon-terminal">
+      <div class="container">
+        <div class="terminal-icon">
+          <span class="prompt">&gt;_</span>
+        </div>
+      </div>
+      <div class="active_line"></div>
+      <span class="text">Terminal</span>
+    </button>
 
+    <!-- Botón animado para abrir el Explorador -->
+    <button class="button" id="icon-explorer">
+      <div class="container">
+        <div class="folder folder_one"></div>
+        <div class="folder folder_two"></div>
+        <div class="folder folder_three"></div>
+        <div class="folder folder_four"></div>
+      </div>
+      <div class="active_line"></div>
+      <span class="text">File Explorer</span>
+    </button>
+
+    <!-- Botón animado para abrir la Ayuda -->
+    <button class="button" id="icon-help">
+      <div class="container">
+        <div class="help-icon">
+          <span class="question-mark">?</span>
+        </div>
+      </div>
+      <div class="active_line"></div>
+      <span class="text">Help</span>
+    </button>
+</div>
+
+  <!-- Contenedor para las ventanas (Terminal, Explorer, Ayuda) -->
   <div id="window-container"></div>
 
   <script src="script.js"></script>
