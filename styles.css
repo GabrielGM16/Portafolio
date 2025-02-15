@@ -2,7 +2,6 @@
 /* Global y Fondo de Escritorio */
 /* ============================ */
 body {
-  /* Ajusta la imagen de fondo a tu gusto */
   background-image: url('img/linux.webp');
   background-size: cover;
   background-position: center;
@@ -11,6 +10,7 @@ body {
   padding: 0;
   height: 100vh;
   overflow: hidden;
+  font-family: 'Arial', sans-serif;
 }
 
 /* =================== */
@@ -38,9 +38,14 @@ body {
   border-radius: 0.4em;
   background: rgba(235, 252, 254, 0.8);
   outline: none;
+  transition: background 0.3s;
 }
 
-/* Contenedor */
+.button:hover {
+  background: rgba(235, 252, 254, 1);
+}
+
+/* Contenedor interno */
 .container {
   position: relative;
   width: 3.5em;
@@ -49,7 +54,7 @@ body {
   overflow: hidden;
 }
 
-/* Estilo del icono de terminal */
+/* Ícono de Terminal */
 .terminal-icon {
   width: 3em;
   height: 2em;
@@ -67,7 +72,7 @@ body {
   font-size: 1.2em;
 }
 
-/* Estilo del icono de ayuda */
+/* Ícono de Ayuda */
 .help-icon {
   width: 2.1em;
   height: 2.1em;
@@ -85,7 +90,7 @@ body {
   font-family: Arial, sans-serif;
 }
 
-/* Icono de carpeta (sin cambios) */
+/* Ícono de Carpeta (Explorador) */
 .folder {
   position: absolute;
 }
@@ -144,14 +149,31 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Línea activa */
+/* Ícono para Notas (nuevo) */
+.note-icon {
+  width: 3em;
+  height: 3em;
+  background: #ffeb3b;
+  border: 2px solid #fbc02d;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.note-icon .note-letter {
+  font-weight: bold;
+  font-size: 1.5em;
+  color: #333;
+}
+
+/* Efecto de línea activa */
 .active_line {
   position: absolute;
   bottom: 0;
   width: 0.9em;
   height: 0.4em;
   background-color: #999;
-  border: none;
   border-radius: 1em;
   transition: all 0.15s linear;
 }
@@ -160,32 +182,6 @@ body {
 .button:focus .active_line {
   width: 2.3em;
   background-color: rgb(41, 126, 255);
-}
-
-.button:focus .container {
-  animation: wow 1s forwards;
-}
-
-@keyframes wow {
-  20% {
-    scale: 0.8;
-  }
-  30% {
-    scale: 1;
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-  65% {
-    transform: translateY(4px);
-  }
-  80% {
-    transform: translateY(0);
-  }
-  100% {
-    scale: 1;
-  }
 }
 
 /* Tooltip de texto */
@@ -210,7 +206,7 @@ body {
 }
 
 /* ======================= */
-/* Contenedor de Ventanas  */
+/* Contenedor de Ventanas */
 /* ======================= */
 #window-container {
   position: absolute;
@@ -221,8 +217,10 @@ body {
 }
 
 /* ===================== */
-/* TERMINAL (mantiene el estilo anterior) */
+/* Ventanas: Terminal, Explorador, Ayuda, etc. */
 /* ===================== */
+
+/* Estilo base para ventanas tipo "card" */
 .window {
   position: absolute;
   background-color: #fff;
@@ -309,30 +307,25 @@ body {
   font-size: inherit;
   width: 90%;
 }
-
-/* ===================== */
-/* EXPLORADOR & AYUDA (Estilo Card) */
-/* ===================== */
 .card {
   position: absolute;
   width: 600px;
   height: 400px;
-  margin: 0 auto;
-  background-color: #F8FBFE; /* color claro */
+  background-color: #F8FBFE;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0,0,0,0.5);
   z-index: 200;
-  overflow: hidden; /* por si el contenido se desborda */
+  overflow: hidden;
 }
 
+/* Barra de herramientas (arrastrable) */
 .tools {
   display: flex;
   align-items: center;
   padding: 9px;
-  cursor: move; /* para arrastrar */
+  cursor: move;
 }
 
-/* Reutilizamos .circle y .box para los "semáforos" */
 .tools .circle {
   padding: 0 4px;
 }
@@ -354,6 +347,7 @@ body {
   background-color: #00ca4e;
 }
 
+/* Contenido interno de la ventana */
 .card__content {
   width: 100%;
   height: calc(100% - 40px);
@@ -361,7 +355,9 @@ body {
   padding: 10px;
 }
 
-/* Explorador */
+/* ===================== */
+/* Explorador (Estilo Card) */
+/* ===================== */
 .explorer-body {
   display: flex;
   flex-wrap: wrap;
@@ -369,8 +365,6 @@ body {
   gap: 15px;
 }
 
-
-/* Cada ítem (carpeta o archivo) */
 .explorer-item {
   margin-left: auto;
   display: flex;
@@ -380,7 +374,6 @@ body {
   height: 100px;
   text-align: center;
 }
-
 
 .explorer-item.folder {
   background-image: url('img/carpetaicon.png');
@@ -396,24 +389,23 @@ body {
   background-position: center top;
 }
 
-
-
 .explorer-item span {
   display: block;
   margin-top: 60px;
   font-size: 0.9em;
   color: #333;
   word-wrap: break-word;
-  word-break: break-all; /* Esto fuerza la división en palabras largas */
-  max-width: 90px; /* Asegura que el texto no desborde el icono */
+  word-break: break-all;
+  max-width: 90px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-
-/* Ayuda */
+/* ===================== */
+/* Ventana de Ayuda */
+/* ===================== */
 .help-body {
-  background-color: #fff0;
+  background-color: transparent;
   height: 100%;
   color: #333;
   font-family: Arial, sans-serif;
@@ -434,4 +426,51 @@ body {
 
 .help-body li:hover {
   background-color: #e0e0e0;
+}
+
+
+/* ===================== */
+/* Ventana de Notas (Sticky Notes) */
+/* ===================== */
+.note-window {
+  position: absolute;
+  width: 250px;
+  min-height: 150px;
+  background-color: #fff9c4;
+  border: 1px solid #f0e68c;
+  border-radius: 10px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+  font-family: 'Arial', sans-serif;
+  overflow: hidden;
+  z-index: 300;
+}
+
+.note-tools {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fdd835;
+  padding: 5px 8px;
+  cursor: move;
+}
+
+.note-tools .note-title {
+  font-weight: bold;
+  font-size: 0.95em;
+  color: #333;
+}
+
+.note-tools .note-close {
+  width: 15px;
+  height: 15px;
+  background-color: #e53935;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.note-content {
+  padding: 10px;
+  font-size: 0.9em;
+  color: #555;
+  white-space: pre-line;
 }

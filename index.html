@@ -1,52 +1,65 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Portafolio - Martin Gabriel Godinez Morales</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <!-- Escritorio -->
-  <div id="desktop">
-    <!-- Botón animado para abrir la Terminal -->
-    <button class="button" id="icon-terminal">
-      <div class="container">
-        <div class="terminal-icon">
-          <span class="prompt">&gt;_</span>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portafolio - Martin Gabriel Godinez Morales</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Escritorio: íconos que se parecen a accesos directos de un sistema operativo -->
+    <div id="desktop">
+      <!-- Botón animado para abrir la Terminal -->
+      <button class="button" id="icon-terminal">
+        <div class="container">
+          <div class="terminal-icon">
+            <span class="prompt">&gt;_</span>
+          </div>
         </div>
-      </div>
-      <div class="active_line"></div>
-      <span class="text">Terminal</span>
-    </button>
+        <div class="active_line"></div>
+        <span class="text">Terminal</span>
+      </button>
 
-    <!-- Botón animado para abrir el Explorador -->
-    <button class="button" id="icon-explorer">
-      <div class="container">
-        <div class="folder folder_one"></div>
-        <div class="folder folder_two"></div>
-        <div class="folder folder_three"></div>
-        <div class="folder folder_four"></div>
-      </div>
-      <div class="active_line"></div>
-      <span class="text">File Explorer</span>
-    </button>
-
-    <!-- Botón animado para abrir la Ayuda -->
-    <button class="button" id="icon-help">
-      <div class="container">
-        <div class="help-icon">
-          <span class="question-mark">?</span>
+      <!-- Botón animado para abrir el Explorador -->
+      <button class="button" id="icon-explorer">
+        <div class="container">
+          <div class="folder folder_one"></div>
+          <div class="folder folder_two"></div>
+          <div class="folder folder_three"></div>
+          <div class="folder folder_four"></div>
         </div>
-      </div>
-      <div class="active_line"></div>
-      <span class="text">Help</span>
-    </button>
-</div>
+        <div class="active_line"></div>
+        <span class="text">File Explorer</span>
+      </button>
 
-  <!-- Contenedor para las ventanas (Terminal, Explorer, Ayuda) -->
-  <div id="window-container"></div>
+      <!-- Botón animado para abrir la Ayuda -->
+      <button class="button" id="icon-help">
+        <div class="container">
+          <div class="help-icon">
+            <span class="question-mark">?</span>
+          </div>
+        </div>
+        <div class="active_line"></div>
+        <span class="text">Help</span>
+      </button>
+      
+      <!-- Botón animado para abrir las Notas (tipo Google Keep) -->
+      <button class="button" id="icon-notes">
+        <div class="container">
+          <div class="note-icon">
+            <!-- Puedes personalizar este ícono (por ejemplo, con una "N" o algún gráfico) -->
+            <span class="note-letter">N</span>
+          </div>
+        </div>
+        <div class="active_line"></div>
+        <span class="text">Notas</span>
+      </button>
+    </div>
 
-  <script src="script.js"></script>
-</body>
+    <!-- Contenedor para las ventanas (Terminal, Explorer, Ayuda, Notas, Contacto, etc.) -->
+    <div id="window-container"></div>
+
+    <!-- Se carga el script principal donde están todas las funciones (incluye openNoteWindow y demás) -->
+    <script src="script.js"></script>
+  </body>
 </html>

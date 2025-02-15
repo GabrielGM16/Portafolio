@@ -35,17 +35,18 @@ function getNextZIndex() {
 }
 
 /**
- * makeDraggable(win, handle)
- * Permite arrastrar el elemento `win` haciendo clic en `handle`.
+ * Permite arrastrar una ventana haciendo clic en su handle.
+ * @param {HTMLElement} win - La ventana a mover.
+ * @param {HTMLElement} handle - Elemento usado para arrastrar.
  */
 function makeDraggable(win, handle) {
-  handle.addEventListener("mousedown", function(e) {
+  handle.addEventListener("mousedown", function (e) {
     let offsetX = e.clientX - win.offsetLeft;
     let offsetY = e.clientY - win.offsetTop;
     
     function mouseMoveHandler(e) {
-      win.style.left = (e.clientX - offsetX) + 'px';
-      win.style.top = (e.clientY - offsetY) + 'px';
+      win.style.left = (e.clientX - offsetX) + "px";
+      win.style.top = (e.clientY - offsetY) + "px";
       win.style.zIndex = getNextZIndex();
     }
     
@@ -63,7 +64,6 @@ function makeDraggable(win, handle) {
 /* VENTANA TERMINAL */
 /*******************/
 function openTerminalWindow() {
-  // Si ya existe la terminal, la traemos al frente.
   if (document.getElementById("terminal-window")) {
     document.getElementById("terminal-window").style.zIndex = getNextZIndex();
     return;
@@ -78,7 +78,7 @@ function openTerminalWindow() {
   win.style.height = "400px";
   win.style.zIndex = getNextZIndex();
 
-  // Encabezado personalizado de la terminal
+  // Barra de la terminal con botones (similar a las otras ventanas)
   const toolbar = document.createElement("div");
   toolbar.classList.add("terminal-toolbar");
   toolbar.innerHTML = `
@@ -89,7 +89,6 @@ function openTerminalWindow() {
         <div class="circle-12 green"></div>
       </div>
       <span class="terminal-title">Terminal - Martin Gabriel Godinez Morales</span>
-      <!-- Podrías usar un botón "+" aquí si deseas -->
     </div>
   `;
   win.appendChild(toolbar);
@@ -101,24 +100,21 @@ function openTerminalWindow() {
 
   document.getElementById("window-container").appendChild(win);
 
-  // Hacer la ventana arrastrable usando el encabezado personalizado
   makeDraggable(win, toolbar);
 
-  // Cerrar la ventana con el "botón" rojo
-  toolbar.querySelector(".red").addEventListener("click", function() {
+  // Agregar funcionalidad de cierre (botón rojo)
+  toolbar.querySelector(".circle-12.red").addEventListener("click", function () {
     win.parentElement.removeChild(win);
   });
 
-  // Configurar la terminal (prompt, historial, comandos, etc.)
   setupTerminal(body);
 }
 
-/* Configuración de la terminal (prompt, comandos, historial, etc.) */
 function setupTerminal(terminalBody) {
   const promptText = "gmorales@portafolio:~$";
   let commandHistory = [];
   let historyIndex = 0;
-  
+
   function typeLine(text, callback) {
     const p = document.createElement("p");
     terminalBody.appendChild(p);
@@ -135,7 +131,7 @@ function setupTerminal(terminalBody) {
     }
     typeChar();
   }
-  
+
   function createPrompt() {
     const container = document.createElement("div");
     container.classList.add("command-line");
@@ -149,20 +145,14 @@ function setupTerminal(terminalBody) {
     const inputField = container.querySelector(".commandInput");
     inputField.focus();
     
-    inputField.addEventListener("keydown", function(event) {
+    inputField.addEventListener("keydown", function (event) {
       if (event.key === "Enter") {
         event.preventDefault();
         const command = inputField.value.trim().toLowerCase();
-        
-        // Mostramos el comando final
-        container.innerHTML = `
-          <span class="prompt">${promptText}</span>
-          <span class="typed-command">${command}</span>
-        `;
-        
+        container.innerHTML = `<span class="prompt">${promptText}</span><span class="typed-command">${command}</span>`;
         commandHistory.push(command);
         historyIndex = commandHistory.length;
-        processCommand(command);
+        processCommand(command, terminalBody, createPrompt);
       } else if (event.key === "ArrowUp") {
         if (commandHistory.length > 0 && historyIndex > 0) {
           historyIndex--;
@@ -181,12 +171,7 @@ function setupTerminal(terminalBody) {
       }
     });
   }
-  
-  // Comandos básicos
-  const commands = {
-    "help": "Comandos disponibles: ls - cd - pwd - cat - explorer - about - projects - contact - clear"
-  };
-  
+
   function listDirectory() {
     const dir = getDirectory(currentPath);
     let result = "";
@@ -199,7 +184,7 @@ function setupTerminal(terminalBody) {
     }
     typeLine(result, createPrompt);
   }
-  
+
   function changeDirectory(dirName) {
     if (dirName === "..") {
       if (currentPath.length > 1) {
@@ -218,11 +203,11 @@ function setupTerminal(terminalBody) {
       }
     }
   }
-  
+
   function printWorkingDirectory() {
     typeLine("/" + currentPath.join("/"), createPrompt);
   }
-  
+
   function catFile(fileName) {
     const dir = getDirectory(currentPath);
     if (dir && dir.hasOwnProperty(fileName) && typeof dir[fileName] === "string") {
@@ -231,30 +216,44 @@ function setupTerminal(terminalBody) {
       typeLine("Archivo no encontrado o es un directorio.", createPrompt);
     }
   }
-  
-  function processCommand(command) {
+
+  function processCommand(command, terminalBody, createPrompt) {
     if (command === "") {
       createPrompt();
       return;
     }
     const tokens = command.split(" ");
     const fsCommands = ["ls", "cd", "pwd", "cat", "explorer"];
+
+    // Comandos especiales
+    if (tokens[0] === "contact") {
+      openContactWindow();
+      createPrompt();
+      return;
+    }
+    if (tokens[0] === "about") {
+      catFile("about.txt");
+      return;
+    }
+    if (tokens[0] === "projects") {
+      openExplorerWindow();
+      createPrompt();
+      return;
+    }
+    
     if (fsCommands.includes(tokens[0])) {
-      handleFileSystemCommand(tokens);
-    } else if (commands.hasOwnProperty(command)) {
-      if (command === "clear") {
-        terminalBody.innerHTML = "";
-        createPrompt();
-      } else {
-        typeLine(commands[command], createPrompt);
-      }
+      handleFileSystemCommand(tokens, createPrompt);
+    } else if (command === "clear") {
+      terminalBody.innerHTML = "";
+      createPrompt();
+    } else if (command === "help") {
+      typeLine("Comandos disponibles: ls - cd - pwd - cat - explorer - about - projects - contact - clear", createPrompt);
     } else {
-      // Podrías mapear "about", "projects", "contact" a catFile si quieres
       typeLine("Comando no reconocido. Escribe 'help' para ver los comandos disponibles.", createPrompt);
     }
   }
-  
-  function handleFileSystemCommand(tokens) {
+
+  function handleFileSystemCommand(tokens, createPrompt) {
     const cmd = tokens[0];
     if (cmd === "ls") {
       listDirectory();
@@ -278,7 +277,7 @@ function setupTerminal(terminalBody) {
       typeLine("Comando no reconocido.", createPrompt);
     }
   }
-  
+
   function printWelcomeMessage() {
     const messages = [
       "Bienvenido a mi portafolio interactivo.",
@@ -297,15 +296,14 @@ function setupTerminal(terminalBody) {
     }
     printNext();
   }
-  
+
   printWelcomeMessage();
 }
 
 /*******************/
-/* VENTANA EXPLORADOR (ESTILO CARD) */
+/* VENTANA EXPLORADOR */
 /*******************/
 function openExplorerWindow() {
-  // Si ya existe, la traemos al frente
   if (document.getElementById("explorer-card")) {
     document.getElementById("explorer-card").style.zIndex = getNextZIndex();
     return;
@@ -318,7 +316,6 @@ function openExplorerWindow() {
   win.style.left = "150px";
   win.style.zIndex = getNextZIndex();
   
-  // "tools" (barra superior con círculos)
   const toolsBar = document.createElement("div");
   toolsBar.classList.add("tools");
   toolsBar.innerHTML = `
@@ -328,85 +325,109 @@ function openExplorerWindow() {
   `;
   win.appendChild(toolsBar);
   
-  // Contenido principal
   const content = document.createElement("div");
   content.classList.add("card__content");
-  // Dentro de card__content ponemos el body del explorador
   const explorerBody = document.createElement("div");
   explorerBody.classList.add("explorer-body");
   content.appendChild(explorerBody);
-  
   win.appendChild(content);
   document.getElementById("window-container").appendChild(win);
   
-  // Hacemos la ventana arrastrable con la barra "tools"
   makeDraggable(win, toolsBar);
   
-  // Cerrar al hacer clic en el círculo rojo
   toolsBar.querySelector(".box.red").addEventListener("click", () => {
     win.parentElement.removeChild(win);
   });
   
-  // Lógica del explorador
   let explorerPath = [...currentPath];
   
   function updateExplorerBody() {
-    explorerBody.innerHTML = ""; // Limpiar el contenido
-    console.log("Ruta actual:", explorerPath);
-    console.log("Contenido de directorio:", getDirectory(explorerPath)); 
-
+    explorerBody.innerHTML = "";
     const dir = getDirectory(explorerPath);
-
-    // Botón para subir un nivel (si no estamos en la raíz)
+    
     if (explorerPath.length > 1) {
-        const upItem = document.createElement("div");
-        upItem.classList.add("explorer-item", "folder");
-        upItem.innerHTML = `<span>..</span>`;
-        upItem.addEventListener("click", (e) => {
-            e.stopPropagation();
-            explorerPath.pop();
-            updateExplorerBody();
-        });
-        explorerBody.appendChild(upItem);
+      const upItem = document.createElement("div");
+      upItem.classList.add("explorer-item", "folder");
+      upItem.innerHTML = `<span>..</span>`;
+      upItem.addEventListener("click", (e) => {
+        e.stopPropagation();
+        explorerPath.pop();
+        updateExplorerBody();
+      });
+      explorerBody.appendChild(upItem);
     }
-
-    // Crear elementos de archivos y carpetas
+    
     for (const key in dir) {
-        const item = document.createElement("div");
-        item.classList.add("explorer-item");
-
+      const item = document.createElement("div");
+      item.classList.add("explorer-item");
+      if (typeof dir[key] === "object") {
+        item.classList.add("folder");
+      } else {
+        item.classList.add("file");
+      }
+      item.innerHTML = `<span>${key}</span>`;
+      item.addEventListener("click", (e) => {
+        e.stopPropagation();
         if (typeof dir[key] === "object") {
-            item.classList.add("folder"); // Si es un directorio
+          explorerPath.push(key);
+          updateExplorerBody();
         } else {
-            item.classList.add("file"); // Si es un archivo
+          // En lugar de alert, abrir una ventana que muestre el contenido del archivo
+          openFileWindow(key, dir[key]);
         }
-
-        item.innerHTML = `<span>${key}</span>`;
-
-        item.addEventListener("click", (e) => {
-            e.stopPropagation();
-            if (typeof dir[key] === "object") {
-                explorerPath.push(key);
-                updateExplorerBody();
-            } else {
-                alert(`Archivo seleccionado: ${key}`);
-            }
-        });
-
-        explorerBody.appendChild(item);
+      });
+      explorerBody.appendChild(item);
     }
+  }
+  
+  updateExplorerBody();
 }
-
-// Inicializar la vista del explorador
-updateExplorerBody();
-}
-
 
 /*******************/
-/* VENTANA AYUDA (ESTILO CARD) */
+/* ABRIR ARCHIVO (Ventana para mostrar contenido de archivos) */
+/*******************/
+function openFileWindow(fileName, fileContent) {
+  // Verifica si ya existe una ventana para este archivo
+  const existing = document.getElementById("file-window-" + fileName);
+  if (existing) {
+    existing.style.zIndex = getNextZIndex();
+    return;
+  }
+  
+  const win = document.createElement("div");
+  win.classList.add("card");
+  win.id = "file-window-" + fileName;
+  win.style.top = "300px";
+  win.style.left = "300px";
+  win.style.zIndex = getNextZIndex();
+  
+  const toolsBar = document.createElement("div");
+  toolsBar.classList.add("tools");
+  toolsBar.innerHTML = `
+    <div class="circle"><span class="box red"></span></div>
+    <div class="circle"><span class="box yellow"></span></div>
+    <div class="circle"><span class="box green"></span></div>
+    <span style="margin-left: 10px;">${fileName}</span>
+  `;
+  win.appendChild(toolsBar);
+  
+  const content = document.createElement("div");
+  content.classList.add("card__content");
+  content.innerHTML = `<pre style="white-space: pre-wrap; padding: 10px;">${fileContent}</pre>`;
+  win.appendChild(content);
+  
+  document.getElementById("window-container").appendChild(win);
+  makeDraggable(win, toolsBar);
+  
+  toolsBar.querySelector(".box.red").addEventListener("click", () => {
+    win.parentElement.removeChild(win);
+  });
+}
+
+/*******************/
+/* VENTANA AYUDA */
 /*******************/
 function openHelpWindow() {
-  // Si ya existe la ventana de ayuda, la traemos al frente
   if (document.getElementById("help-card")) {
     document.getElementById("help-card").style.zIndex = getNextZIndex();
     return;
@@ -419,7 +440,6 @@ function openHelpWindow() {
   win.style.left = "200px";
   win.style.zIndex = getNextZIndex();
   
-  // Barra superior con círculos
   const toolsBar = document.createElement("div");
   toolsBar.classList.add("tools");
   toolsBar.innerHTML = `
@@ -429,25 +449,20 @@ function openHelpWindow() {
   `;
   win.appendChild(toolsBar);
   
-  // Contenido principal
   const content = document.createElement("div");
   content.classList.add("card__content");
   const helpBody = document.createElement("div");
   helpBody.classList.add("help-body");
   content.appendChild(helpBody);
-  
   win.appendChild(content);
   document.getElementById("window-container").appendChild(win);
   
-  // Arrastrable
   makeDraggable(win, toolsBar);
   
-  // Cerrar con el círculo rojo
   toolsBar.querySelector(".box.red").addEventListener("click", () => {
     win.parentElement.removeChild(win);
   });
   
-  // Lista de comandos (ejemplo)
   const commandsList = [
     "ls - listar directorio",
     "cd <directorio> - cambiar directorio",
@@ -465,12 +480,10 @@ function openHelpWindow() {
   commandsList.forEach(cmd => {
     const li = document.createElement("li");
     li.textContent = cmd;
-    // Al hacer clic, abrimos (o traemos al frente) la Terminal
     li.addEventListener("click", () => {
       let termWindow = document.getElementById("terminal-window");
       if (!termWindow) {
         openTerminalWindow();
-        // Esperamos un momento a que se cree la terminal
         setTimeout(() => {
           const inputField = document.querySelector(".commandInput");
           if (inputField) {
@@ -492,8 +505,120 @@ function openHelpWindow() {
 }
 
 /*******************/
+/* VENTANA CONTACTO */
+/*******************/
+function openContactWindow() {
+  if (document.getElementById("contact-card")) {
+    document.getElementById("contact-card").style.zIndex = getNextZIndex();
+    return;
+  }
+  const win = document.createElement("div");
+  win.classList.add("card");
+  win.id = "contact-card";
+  win.style.top = "250px";
+  win.style.left = "250px";
+  win.style.zIndex = getNextZIndex();
+
+  const toolsBar = document.createElement("div");
+  toolsBar.classList.add("tools");
+  toolsBar.innerHTML = `
+    <div class="circle"><span class="box red"></span></div>
+    <div class="circle"><span class="box yellow"></span></div>
+    <div class="circle"><span class="box green"></span></div>
+  `;
+  win.appendChild(toolsBar);
+
+  const content = document.createElement("div");
+  content.classList.add("card__content");
+  content.innerHTML = `
+    <div style="padding: 1em; text-align: center;">
+      <p>gmoficial16@gmail.com</p>
+      <p>+123456789</p>
+    </div>
+  `;
+  win.appendChild(content);
+  document.getElementById("window-container").appendChild(win);
+
+  makeDraggable(win, toolsBar);
+
+  toolsBar.querySelector(".box.red").addEventListener("click", () => {
+    win.parentElement.removeChild(win);
+  });
+}
+
+/*******************/
+/* VENTANA DE NOTAS (STICKY NOTES) */
+/*******************/
+function openNoteWindow(noteTitle, noteContent, posX = 300, posY = 300) {
+  const note = document.createElement("div");
+  note.classList.add("note-window");
+  note.style.top = posY + "px";
+  note.style.left = posX + "px";
+  note.style.zIndex = getNextZIndex();
+
+  // Barra superior de la nota con título y botón de cierre
+  const noteTools = document.createElement("div");
+  noteTools.classList.add("note-tools");
+  noteTools.innerHTML = `
+    <div class="note-title">${noteTitle}</div>
+    <div class="note-close"></div>
+  `;
+  note.appendChild(noteTools);
+
+  // Opcional: Agregar una sección para la foto del desarrollador
+  const noteHeader = document.createElement("div");
+  noteHeader.classList.add("note-header");
+  noteHeader.style.textAlign = "center";
+  noteHeader.style.padding = "5px";
+  noteHeader.innerHTML = `<img src="img/mi-foto.jpg" alt="Mi Foto" style="width:50px; height:50px; border-radius:50%;">`;
+  note.appendChild(noteHeader);
+
+  // Contenido de la nota
+  const noteContentDiv = document.createElement("div");
+  noteContentDiv.classList.add("note-content");
+  noteContentDiv.innerHTML = `<p>${noteContent}</p>`;
+  note.appendChild(noteContentDiv);
+
+  document.getElementById("window-container").appendChild(note);
+
+  makeDraggable(note, noteTools);
+
+  noteTools.querySelector(".note-close").addEventListener("click", () => {
+    note.parentElement.removeChild(note);
+  });
+}
+
+/*******************/
 /* EVENTOS DE LOS BOTONES DEL ESCRITORIO */
 /*******************/
 document.getElementById("icon-terminal").addEventListener("click", openTerminalWindow);
 document.getElementById("icon-explorer").addEventListener("click", openExplorerWindow);
 document.getElementById("icon-help").addEventListener("click", openHelpWindow);
+document.getElementById("icon-notes").addEventListener("click", () => {
+  // Abre una nota de ejemplo al hacer clic en el ícono de Notas
+  openNoteWindow("Nota", "Esta es una nota interactiva sobre mi trabajo y proyectos.", 350, 300);
+});
+
+/*******************/
+/* INICIALIZACIÓN: Crear notas predeterminadas */
+/*******************/
+document.addEventListener("DOMContentLoaded", () => {
+  openNoteWindow(
+    "Sobre Mí",
+    "Soy Martin Gabriel Godinez Morales, desarrollador de software apasionado por crear experiencias interactivas y soluciones innovadoras.",
+    320,
+    180
+  );
+  openNoteWindow(
+    "Proyectos",
+    "Proyecto X: Aplicación web de gestión.\nProyecto Y: Plataforma de e-commerce.",
+    600,
+    250
+  );
+  openNoteWindow(
+    "Contacto",
+    "gmoficial16@gmail.com\n+123456789",
+    450,
+    400
+  );
+});
